@@ -3,12 +3,17 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: shadowsocks/android-ndk-go:v1.0
+      - image: shadowsocks/android-ndk-go # 确保这是你构建的包含NDK的镜像
     environment:
       JVM_OPTS: -Xmx3500m
       GRADLE_OPTS: -Dorg.gradle.workers.max=1 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy="in-process"
     steps:
       - checkout
+      - run:
+          name: Print NDK Path for Debugging
+          command: |
+            echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
+            ls $ANDROID_NDK_HOME
       - run: git submodule update --init --recursive
       - restore_cache:
           key: jars-{{ checksum "build.gradle.kts" }}
@@ -19,7 +24,7 @@ jobs:
           command: ./gradlew assembleDebug check
       - save_cache:
           paths:
-          - ~/go
+            - ~/go
           key: go-{{ checksum "app/src/main/go/v2ray-plugin/go.sum" }}
       - save_cache:
           paths:
