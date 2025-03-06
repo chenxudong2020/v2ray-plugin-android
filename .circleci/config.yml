@@ -12,8 +12,8 @@ jobs:
       - run:
           name: Print NDK Path for Debugging
           command: |
-            echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
-            ls $ANDROID_NDK_HOME
+            echo "ANDROID_HOME is set to $ANDROID_HOME"
+            ls $ANDROID_HOME
       - run: git submodule update --init --recursive
       - restore_cache:
           key: jars-{{ checksum "build.gradle.kts" }}
