@@ -14,11 +14,11 @@ jobs:
           command: |
             echo "ANDROID_HOME is set to $ANDROID_HOME"
             ls $ANDROID_HOME
-            echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
-            ls $ANDROID_NDK_HOME
             echo "-----------------------------------------------------------------------"
-            export ANDROID_NDK_HOME=/opt/android/sdk/ndk/21.4.7075529
+            export ANDROID_NDK_HOME=$ANDROID_HOME$ANDROID_NDK_HOME
             echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
+            echo "-----------------------------------------------------------------------"
+            ls $ANDROID_NDK_HOME
       - run: git submodule update --init --recursive
       - restore_cache:
           key: jars-{{ checksum "build.gradle.kts" }}
