@@ -26,7 +26,7 @@ jobs:
           key: go-{{ checksum "app/src/main/go/v2ray-plugin/go.sum" }}
       - run:
           name: Run Build and Tests
-          command: ./gradlew assembleDebug check
+          command: ./gradlew assembleDebug check --info
       - save_cache:
           paths:
             - ~/go
