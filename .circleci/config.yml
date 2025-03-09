@@ -3,30 +3,43 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: shadowsocks/android-ndk-go # 确保这是你构建的包含NDK的镜像
+      - image: circleci/android:api-30 # 使用官方 CircleCI Android 镜像
     environment:
       JVM_OPTS: -Xmx3500m
       GRADLE_OPTS: -Dorg.gradle.workers.max=1 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy="in-process"
     steps:
       - checkout
       - run:
-          name: Print NDK Path for Debugging
+          name: Install Android NDK
+          command: |
+            echo "Installing Android NDK..."
+            sdkmanager --install "ndk;21.3.6528147" # 安装指定版本的 NDK
+            export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.3.6528147
+            echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
+            ls -la $ANDROID_NDK_HOME
+      - run:
+          name: Print SDK Path for Debugging
           command: |
             echo "ANDROID_HOME is set to $ANDROID_HOME"
-            ls $ANDROID_HOME
+            ls -la $ANDROID_HOME
             echo "-----------------------------------------------------------------------"
-            export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle # 确保路径正确
             echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
             echo "-----------------------------------------------------------------------"
-            ls $ANDROID_NDK_HOME
+            ls -la $ANDROID_NDK_HOME
       - run: git submodule update --init --recursive
       - restore_cache:
-          key: jars-{{ checksum "build.gradle.kts" }}
+          keys:
+            - jars-{{ checksum "build.gradle.kts" }}
+            - jars-
       - restore_cache:
-          key: go-{{ checksum "app/src/main/go/v2ray-plugin/go.sum" }}
+          keys:
+            - go-{{ checksum "app/src/main/go/v2ray-plugin/go.sum" }}
+            - go-
       - run:
           name: Run Build and Tests
-          command: ./gradlew assembleDebug check --info
+          command: |
+            chmod +x ./gradlew
+            ./gradlew assembleDebug check --info
       - save_cache:
           paths:
             - ~/go
