@@ -15,7 +15,7 @@ jobs:
             echo "ANDROID_HOME is set to $ANDROID_HOME"
             ls $ANDROID_HOME
             echo "-----------------------------------------------------------------------"
-            export ANDROID_NDK_HOME=$ANDROID_HOME$ANDROID_NDK_HOME
+            export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle # 确保路径正确
             echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
             echo "-----------------------------------------------------------------------"
             ls $ANDROID_NDK_HOME
