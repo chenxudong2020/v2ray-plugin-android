@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-30 # 使用官方 CircleCI Android 镜像
+      - image: circleci/android:api-30
     environment:
       JVM_OPTS: -Xmx3500m
       GRADLE_OPTS: -Dorg.gradle.workers.max=1 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy="in-process"
@@ -13,8 +13,8 @@ jobs:
           name: Install Android NDK
           command: |
             echo "Installing Android NDK..."
-            sdkmanager --install "ndk;21.3.6528147" # 安装指定版本的 NDK
-            export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.3.6528147
+            yes | sdkmanager --install "ndk;21.4.7075529" # 安装指定版本的 NDK
+            export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529
             echo "ANDROID_NDK_HOME is set to $ANDROID_NDK_HOME"
             ls -la $ANDROID_NDK_HOME
       - run:
